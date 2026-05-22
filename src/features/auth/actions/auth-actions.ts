@@ -11,5 +11,6 @@ export async function signUpAction(input: SignUpInput) {
             success: ''
         }
     }
-    await authServices.register(data.data);
+    const response = await authServices.register(data.data);
+    return response;
 }

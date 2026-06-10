@@ -1,5 +1,7 @@
-import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react"
-import { Bars3Icon } from "@heroicons/react/24/outline"
+import { signOut } from "@/src/lib/auth-client";
+import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
+import { Bars3Icon } from "@heroicons/react/24/outline";
+import { redirect } from "next/navigation";
 
 export default function UserMenu() {
 
@@ -42,7 +44,16 @@ export default function UserMenu() {
         <MenuItem>
           <button
             className="block w-full text-left px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden dark:text-gray-300 dark:data-focus:bg-white/5"
-          >
+            onClick={async () => {
+              await signOut({
+                fetchOptions: {
+                  onSuccess: () => {
+                    redirect('/auth/login')
+                  }
+                }
+              });
+            }}
+         >
             Cerrar Sesión
           </button>
         </MenuItem>

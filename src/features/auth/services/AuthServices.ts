@@ -1,8 +1,8 @@
 import { auth } from "@/lib/auth";
+import { APIError, success } from "better-auth";
 import { headers } from "next/headers";
-import { SignInInput, SignUpInput } from "../schema/authSchema";
+import { ForgotPasswordInput, SetPasswordInput, SignInInput, SignUpInput } from "../schema/authSchema";
 import { authRepository, IAuthRepository } from "./AuthRepository";
-import { APIError } from "better-auth";
 
 class AuthServices {
   constructor(private authRepository: IAuthRepository) {}
@@ -96,6 +96,57 @@ class AuthServices {
       error: "",
       success: "",
     };
+  }
+  async requestPasswordReset(input: ForgotPasswordInput) {
+      const user = await this.authRepository.userExists(input.email);
+      if(!user) {
+        return {
+          error: "El usuario no existe, por favor verifica el correo ingresado.",
+          success: "",
+        }
+      }
+
+      const { email } = input;
+      await auth.api.requestPasswordReset({
+        body: {
+          email
+        }
+      })
+
+      return {
+        error: "",
+        success: "Hemos enviado un correo con las instrucciones para restablecer tu contraseña, por favor revisa tu correo."
+      }
+  }
+
+
+  async confirmPasswordReset(input: SetPasswordInput, token: string) {
+    const { newPassword } = input;
+    try {
+      await auth.api.resetPassword({
+        body: {
+          newPassword,
+          token
+        }
+      })
+
+      return {
+        error: "",
+        success: "Password restablecida exitosamente, por favor inicia sesión con tu nueva contraseña."
+      }
+    } catch (error) {
+      if ( error instanceof APIError) {
+        return {
+          error: "El token no es válido o ha expirado",
+          success: "",
+        }
+      }
+    }
+
+    return {
+      error: "",
+      success: ""
+    }
   }
 }
 

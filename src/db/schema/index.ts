@@ -1,5 +1,5 @@
 import {  accounts, sessions, users, verifications } from './auth';
-import { communities } from './community';
+import { community } from './community';
 
 
 export {
@@ -7,5 +7,5 @@ export {
     sessions,
     accounts,
     verifications,
-    communities
+    community
 }

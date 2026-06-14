@@ -73,8 +73,8 @@ class AuthServices {
       if (error instanceof APIError) {
 
 
-        console.log(error.message);
-        console.log(error.statusCode);
+        // console.log(error.message);
+        // console.log(error.statusCode);
 
         const message: Record<number, string> = {
           401: "Contraseña incorrecta, por favor intenta de nuevo.",

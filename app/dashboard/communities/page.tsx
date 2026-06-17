@@ -1,3 +1,4 @@
+import MyCommunities from "@/src/features/communities/components/MyCommunities";
 import Heading from "@/src/shared/components/typography/Heading";
 import { generatePageTitle } from "@/src/shared/utils/metadata";
 import Link from "next/link";
@@ -27,6 +28,8 @@ export default function CommunitiesPage() {
           Comunidades a las que te uniste
         </Link>
       </div>
+
+      <MyCommunities/>
     </>
   );
 }

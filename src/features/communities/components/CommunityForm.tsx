@@ -4,12 +4,13 @@ import {
     FormLabel,
     FormTextArea,
 } from "@/src/shared/components/forms";
-import { UploadDropzone } from "@/src/shared/utils/uploadthing";
+import UploadImage from "@/src/shared/components/upload/UploadImage";
 import { useFormContext } from "react-hook-form";
-import { twMerge } from "tailwind-merge";
 import { CommunityInput } from "../schema/CommunitySchema";
 
+
 export default function CommunityForm() {
+  
   const {
     register,
     formState: { errors },
@@ -26,26 +27,8 @@ export default function CommunityForm() {
 
       {errors.name && <FormError>{errors.name.message}</FormError>}
 
-      <UploadDropzone endpoint={"meetiUploader"} 
-        className="ut-button:bg-orange-600 hover:ut-button:bg-orange-700"
-        appearance={{
-          button: 'font-black py-3 w-full block h-auto rounded-none after:bg-orange-500 after:h-2 after:top-0',
-          label: 'text-sm text-gray-500 hover:text-gray-700',
-          allowedContent: 'text-sm'
-        }}
-        onClientUploadComplete={(resp) => {{
-          console.log(resp[0].ufsUrl);
-        }}}
-        content={{
-          button: 'Selecciona una imagen',
-          label: 'Arrastra y suelta tu imagen aquí, o haz clic para seleccionar',
-          allowedContent: 'Solo se permiten imágenes (max 1MB)'
-        }}
-        config={{
-          cn: twMerge,
-          mode: 'auto',
-        }}
-      />
+      <FormLabel>Imagen comunidad</FormLabel>
+      <UploadImage/>
 
       <FormLabel htmlFor="description">Descripción Comunidad</FormLabel>
       <FormTextArea

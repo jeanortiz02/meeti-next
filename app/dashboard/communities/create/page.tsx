@@ -1,7 +1,9 @@
 import CreateCommunity from "@/src/features/communities/components/CreateCommunity";
+import { requireAuth } from "@/src/lib/auth-server";
 import Heading from "@/src/shared/components/typography/Heading";
 import { generatePageTitle } from "@/src/shared/utils/metadata";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 const title = "Crea tu comunidad";
 
@@ -9,7 +11,11 @@ export const metadata = {
   title: generatePageTitle(title),
 };
 
-export default function CreateCommunityPage() {
+export default async function CreateCommunityPage() {
+  const { session } = await requireAuth();
+  if (!session) {
+    redirect("/auth/login");
+  }
   return (
     <>
       <Heading>{title}</Heading>

@@ -7,8 +7,10 @@ import { UploadDropzone } from "../../utils/uploadthing";
 import { FormError } from "../forms";
 
 export default function UploadImage() {
-  const { formState: { errors }, setValue, clearErrors } = useFormContext<CommunityInput>();
+  const { formState: { errors }, setValue, clearErrors, getValues } = useFormContext<CommunityInput>();
   const [uploadedImage, setUploadedImage] = useState("");
+  const currentImage = getValues("image") ? getValues("image") : null;
+
   return (
     <>
       <UploadDropzone
@@ -49,6 +51,18 @@ export default function UploadImage() {
           <Image
             src={uploadedImage}
             alt="Nueva imagen"
+            width={300}
+            height={200}
+          />
+        </>
+      )}
+
+      { currentImage && !uploadedImage && (
+        <>
+          <p className="text-lg font-bold">Imagen actual:</p>
+          <Image
+            src={currentImage}
+            alt="IImagen actual"
             width={300}
             height={200}
           />

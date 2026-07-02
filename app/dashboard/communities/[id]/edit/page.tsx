@@ -17,7 +17,7 @@ export default async function EditCommunityPage(
   return (
     <>
       <Heading>Editar Comunidad</Heading>
-      <EditCommunity/>
+      <EditCommunity community={community.data} />
     </>
   );
 }

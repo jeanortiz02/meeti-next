@@ -1,12 +1,12 @@
 import { User } from "better-auth";
-import { CommunityInput } from "../schema/CommunitySchema";
-import {
-  communityRepository,
-  ICommunityRepository,
-} from "./CommunityRepository";
+import { notFound } from "next/navigation";
 import { CommunityPolicy } from "../policies/CommunityPolicy";
 import { MemberShiPolicy } from "../policies/MembershipPolicy";
-import { notFound } from "next/navigation";
+import { CommunityInput } from "../schema/CommunitySchema";
+import {
+    communityRepository,
+    ICommunityRepository,
+} from "./CommunityRepository";
 
 class CommunityService {
   constructor(private communityRepository: ICommunityRepository) {}
@@ -82,6 +82,18 @@ class CommunityService {
         canLeave,
       },
     };
+  }
+
+
+  async updateCommunity(data: CommunityInput, communityId: string, user: User) {
+
+    const community = await this.getCommunity(communityId);
+
+    if( !CommunityPolicy.canEdit(user, community)) {
+      throw new Error("No tienes permisos para editar esta comunidad");
+    }
+
+    await this.communityRepository.update(data, communityId);
   }
 }
 

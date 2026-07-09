@@ -1,12 +1,14 @@
+import { checkPassword } from "@/src/shared/utils/auth";
 import { User } from "better-auth";
 import { notFound } from "next/navigation";
 import { CommunityPolicy } from "../policies/CommunityPolicy";
 import { MemberShiPolicy } from "../policies/MembershipPolicy";
 import { CommunityInput } from "../schema/CommunitySchema";
 import {
-    communityRepository,
-    ICommunityRepository,
+  communityRepository,
+  ICommunityRepository,
 } from "./CommunityRepository";
+import { deleteUTFiles } from "@/src/lib/uploadthing-server";
 
 class CommunityService {
   constructor(private communityRepository: ICommunityRepository) {}
@@ -84,16 +86,42 @@ class CommunityService {
     };
   }
 
-
   async updateCommunity(data: CommunityInput, communityId: string, user: User) {
-
     const community = await this.getCommunity(communityId);
 
-    if( !CommunityPolicy.canEdit(user, community)) {
+    if (!CommunityPolicy.canEdit(user, community)) {
       throw new Error("No tienes permisos para editar esta comunidad");
     }
 
     await this.communityRepository.update(data, communityId);
+  }
+
+  async deleteCommunity(communityId: string, password: string, user: User) {
+    // Obtener comunidad
+    const community = await this.getCommunity(communityId);
+
+    // Verificar permisos
+    if (!CommunityPolicy.canDelete(user, community)) {
+      throw new Error("No tienes permisos para eliminar esta comunidad");
+    }
+
+    // Verificar el password del usuario
+    const isValidPassword = await checkPassword(password);
+    if (!isValidPassword) {
+      return {
+        error: "El password es incorrecto",
+        success: "",
+      };
+    }
+
+    // Eliminar la comunidad
+    await this.communityRepository.delete(communityId);
+    await deleteUTFiles(community.image);
+
+    return {
+      error: "",
+      success: "Comunidad eliminada correctamente",
+    };
   }
 }
 

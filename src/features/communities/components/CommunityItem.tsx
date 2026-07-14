@@ -1,13 +1,13 @@
-import Image from 'next/image';
-import type { CommunityWithPermissions } from '../types/community.types'
-import Link from 'next/link';
-import CommunityDropdownMenu from './CommunityDropdownMenu';
+import Image from "next/image";
+import type { CommunityWithPermissions } from "../types/community.types";
+import Link from "next/link";
+import CommunityDropdownMenu from "./CommunityDropdownMenu";
 type Props = {
-    community : CommunityWithPermissions
-}
+  community: CommunityWithPermissions;
+};
 
-export default function CommunityItem( { community} : Props) {
-    const { image, name, description } = community.data;
+export default function CommunityItem({ community }: Props) {
+  const { image, name, description, id } = community.data;
   return (
     <li className="flex justify-between gap-x-6 py-5">
       <div className="flex items-start min-w-0 gap-x-4">
@@ -22,7 +22,11 @@ export default function CommunityItem( { community} : Props) {
           />
         </div>
         <div className="min-w-0 flex-auto">
-          <Link href={`/`} className="hover:underline font-bold text-lg">
+          <Link
+            href={`/communities/${id}/`}
+            target="_blank"
+            className="hover:underline font-bold text-lg"
+          >
             {name}
           </Link>
           <p className="text-gray-600 text-sm line-clamp-2">{description}</p>
@@ -30,8 +34,10 @@ export default function CommunityItem( { community} : Props) {
         </div>
       </div>
       <div className="flex shrink-0 items-center gap-x-6">
-        { community.context.isAdmin && <CommunityDropdownMenu community={community.data}/>}
+        {community.context.isAdmin && (
+          <CommunityDropdownMenu community={community.data} />
+        )}
       </div>
     </li>
-  )
+  );
 }

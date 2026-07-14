@@ -1,11 +1,2 @@
-import {  accounts, sessions, users, verifications } from './auth';
-import { community } from './community';
-
-
-export {
-    users,
-    sessions,
-    accounts,
-    verifications,
-    community
-}
+export {  accounts, sessions, users, verifications } from './auth';
+export { community, communityMembers } from './community';

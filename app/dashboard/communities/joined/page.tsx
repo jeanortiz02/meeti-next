@@ -1,6 +1,9 @@
+import { membershipService } from "@/src/features/communities/services/MembershipService";
+import { requireAuth } from "@/src/lib/auth-server";
 import Heading from "@/src/shared/components/typography/Heading";
 import { generatePageTitle } from "@/src/shared/utils/metadata";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 const title = "Comunidades a las que te uniste";
 
@@ -8,7 +11,13 @@ export const metadata = {
   title: generatePageTitle(title),
 };
 
-export default function JoinedCommunitiesPage() {
+export default async function JoinedCommunitiesPage() {
+  
+  const { session } = await requireAuth();
+  if(!session) redirect('/auth/login');
+
+  await membershipService.getJoinedCommunity(session.user);
+
   return (
     <>
       <Heading>{title}</Heading>

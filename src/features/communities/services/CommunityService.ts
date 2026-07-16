@@ -9,9 +9,13 @@ import {
   ICommunityRepository,
 } from "./CommunityRepository";
 import { deleteUTFiles } from "@/src/lib/uploadthing-server";
+import { IMembershipRepository, membershipRepository } from "./MembershipRepository";
 
 class CommunityService {
-  constructor(private communityRepository: ICommunityRepository) {}
+  constructor(
+    private communityRepository: ICommunityRepository,
+    private membershipRepository : IMembershipRepository
+  ) {}
 
   async createCommunity(data: CommunityInput, userId: string) {
     const response = await this.communityRepository.create({
@@ -72,7 +76,7 @@ class CommunityService {
     }
 
 
-    const isMember = false;
+    const isMember = await this.membershipRepository.isMember(communityId, user.id);
     const isAdmin = CommunityPolicy.isAdmin(user, community);
     const canEdit = CommunityPolicy.canEdit(user, community);
     const canDelete = CommunityPolicy.canDelete(user, community);
@@ -135,4 +139,4 @@ class CommunityService {
   }
 }
 
-export const communityService = new CommunityService(communityRepository);
+export const communityService = new CommunityService(communityRepository, membershipRepository);

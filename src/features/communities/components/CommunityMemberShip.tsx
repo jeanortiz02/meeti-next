@@ -3,32 +3,35 @@
 import { useState } from "react";
 import { CommunityPermissions } from "../types/community.types";
 import { toggleMembershipAction } from "../actions/membership-actions";
+import { toast } from "react-hot-toast";
 
 type Props = {
   permissions: CommunityPermissions;
-    communityId: string;
+  communityId: string;
 };
 
-export default function CommunityMemberShip({ permissions, communityId }: Props) {
+export default function CommunityMemberShip({
+  permissions,
+  communityId,
+}: Props) {
   const [canJoin, setCanJoin] = useState(permissions.canJoin);
-  const [canLeave, setCanLeave] = useState(permissions.canLeave);
 
   const handleClick = async () => {
-    await toggleMembershipAction(communityId);
-  }
+    const result = await toggleMembershipAction(communityId);
+
+    if (result?.success) {
+      toast.success(result.message);
+      setCanJoin(result.newPermissions.canJoin);
+    }
+  };
   return (
     <>
-      {canJoin && (
-        <button className="font-bold text-lg w-full lg:w-auto px-5 py-2 text-white cursor-pointer bg-orange-600" onClick={handleClick}>
-          Unirme a la comunidad
-        </button>
-      )}
-
-      {canLeave && (
-        <button className="font-bold text-lg w-full lg:w-auto px-5 py-2 text-white cursor-pointer bg-red-600" onClick={handleClick}>
-          Abandonar a la comunidad
-        </button>
-      )}
+      <button
+        className={`${canJoin ? "bg-orange-500" : "bg-orange-600" } font-bold text-lg w-full lg:w-auto px-5 py-2 text-white cursor-pointer`}
+        onClick={handleClick}
+      >
+        {canJoin ? "Unirme a la comunidad" : "Abandonar la comunidad"}
+      </button>
     </>
   );
 }

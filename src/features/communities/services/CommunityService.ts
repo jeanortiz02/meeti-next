@@ -9,12 +9,15 @@ import {
   ICommunityRepository,
 } from "./CommunityRepository";
 import { deleteUTFiles } from "@/src/lib/uploadthing-server";
-import { IMembershipRepository, membershipRepository } from "./MembershipRepository";
+import {
+  IMembershipRepository,
+  membershipRepository,
+} from "./MembershipRepository";
 
 class CommunityService {
   constructor(
     private communityRepository: ICommunityRepository,
-    private membershipRepository : IMembershipRepository
+    private membershipRepository: IMembershipRepository,
   ) {}
 
   async createCommunity(data: CommunityInput, userId: string) {
@@ -29,9 +32,10 @@ class CommunityService {
     const communities = await this.communityRepository.findByUser(user.id);
 
     const enriched = await Promise.all(
-      communities.map((community) => {
+      communities.map(async(community) => {
         const isMember = true;
         const isAdmin = CommunityPolicy.isAdmin(user, community);
+        const memberCount = await this.membershipRepository.getMemberCount(community.id);
         const canEdit = CommunityPolicy.canEdit(user, community);
         const canDelete = CommunityPolicy.canDelete(user, community);
         const canViewMembers = CommunityPolicy.canViewMembers(user, community);
@@ -40,6 +44,7 @@ class CommunityService {
 
         return {
           data: community,
+          memberCount,
           context: {
             isMember,
             isAdmin,
@@ -66,17 +71,21 @@ class CommunityService {
 
   async getCommunityDetails(communityId: string, user?: User) {
     const community = await this.getCommunity(communityId);
+    const memberCount = await this.membershipRepository.getMemberCount(community.id);
 
     if (!user) {
-        return {
-          data: community,
-          context: null,
-          permission: null,
-        }
+      return {
+        data: community,
+        memberCount,
+        context: null,
+        permission: null,
+      };
     }
-
-
-    const isMember = await this.membershipRepository.isMember(communityId, user.id);
+    
+    const isMember = await this.membershipRepository.isMember(
+      communityId,
+      user.id,
+    );
     const isAdmin = CommunityPolicy.isAdmin(user, community);
     const canEdit = CommunityPolicy.canEdit(user, community);
     const canDelete = CommunityPolicy.canDelete(user, community);
@@ -86,6 +95,7 @@ class CommunityService {
 
     return {
       data: community,
+      memberCount,
       context: {
         isMember,
         isAdmin,
@@ -139,4 +149,7 @@ class CommunityService {
   }
 }
 
-export const communityService = new CommunityService(communityRepository, membershipRepository);
+export const communityService = new CommunityService(
+  communityRepository,
+  membershipRepository,
+);

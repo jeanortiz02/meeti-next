@@ -1,14 +1,14 @@
 import { db } from "@/src/db";
 import { communityMembers } from "@/src/db/schema";
-import { User } from "better-auth";
-import { and, eq } from "drizzle-orm";
-import { SelectCommunity } from "../types/community.types";
+import { and, count, eq } from "drizzle-orm";
+import { JoinedCommunity } from "../types/community.types";
 
 export interface IMembershipRepository {
-  addMember: (communityId: string, userId: string) => Promise<void>;
-  removeMember: (communityId: string, userId: string) => Promise<void>;
-  isMember: (communityId: string, userId: string) => Promise<boolean>;
-  findJoinedCommunity: (userId: string) => Promise<void>;
+  addMember(communityId: string, userId: string): Promise<void>;
+  removeMember(communityId: string, userId: string): Promise<void>;
+  isMember(communityId: string, userId: string): Promise<boolean>;
+  findJoinedCommunity(userId: string): Promise<JoinedCommunity[]>;
+  getMemberCount(communityId: string): Promise<number>;
 }
 
 class MembershipRepository implements IMembershipRepository {
@@ -44,17 +44,26 @@ class MembershipRepository implements IMembershipRepository {
     return !!result;
   }
 
-  async findJoinedCommunity(userId: string): Promise<void> {
+  async findJoinedCommunity(userId: string) {
     const result = await db.query.communityMembers.findMany({
       where: {
-        userId
+        userId,
       },
       with: {
         community: true,
-      }
-    })
+        user: true,
+      },
+    });
 
-    console.log(result);
+    return result;
+  }
+
+  async getMemberCount(communityId: string): Promise<number> {
+    const [result] = await db
+      .select({total: count()})
+      .from(communityMembers)
+      .where(eq(communityMembers.communityId, communityId));
+    return result.total;
   }
 }
 

@@ -1,3 +1,4 @@
+import CommunityItem from "@/src/features/communities/components/CommunityItem";
 import { membershipService } from "@/src/features/communities/services/MembershipService";
 import { requireAuth } from "@/src/lib/auth-server";
 import Heading from "@/src/shared/components/typography/Heading";
@@ -16,7 +17,7 @@ export default async function JoinedCommunitiesPage() {
   const { session } = await requireAuth();
   if(!session) redirect('/auth/login');
 
-  await membershipService.getJoinedCommunity(session.user);
+  const community = await membershipService.getJoinedCommunity(session.user);
 
   return (
     <>
@@ -28,6 +29,17 @@ export default async function JoinedCommunitiesPage() {
       >
         Volver a mis Comunidades
       </Link>
+
+      {community.length ? (
+        <ul role="list" className="divide-y divide-gray-100 mt-10 shadow-lg p-10">
+          {community.map( community => (
+            <CommunityItem key={community.data.id} community={community}/>
+          ))}
+        </ul>
+      ) : (
+        <p className="text-center mt-10 text-lg">No te haz unido a una comunidad aún</p>
+      )}
+      
     </>
   );
 }

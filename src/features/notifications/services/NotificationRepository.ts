@@ -4,14 +4,40 @@ import {
   SelectNotification,
 } from "../types/notifications.types";
 import { notifications } from "@/src/db/schema";
+import { and, count, eq } from "drizzle-orm";
 
 export interface INotificationRepository {
   create(data: InsertNotification): Promise<SelectNotification>;
+  getUnreadCount(userId: string): Promise<number>;
+  findByUserId(userId: string): Promise<SelectNotification[]>;
 }
 
 class NotificationRepository implements INotificationRepository {
   async create(data: InsertNotification): Promise<SelectNotification> {
     const [result] = await db.insert(notifications).values(data).returning();
+
+    return result;
+  }
+
+  async getUnreadCount(userId: string): Promise<number> {
+    const [result] = await db
+      .select({ count: count() })
+      .from(notifications)
+      .where(
+        and(eq(notifications.userId, userId), eq(notifications.read, false)),
+      );
+
+    return result.count;
+  }
+
+  async findByUserId(userId: string): Promise<SelectNotification[]> {
+    const result = await db.query.notifications.findMany({
+      where: {
+        AND: [{ userId: { eq: userId } }, { read: { eq: false } }],
+      },
+      limit: 10,
+      orderBy: { createdAt: "desc" },
+    });
 
     return result;
   }

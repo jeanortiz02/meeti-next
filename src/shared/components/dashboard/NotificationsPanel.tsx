@@ -1,13 +1,36 @@
+import { useSession } from "@/src/lib/auth-client";
 import { BellIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
-import { Suspense, use } from "react";
+import Pusher from "pusher-js";
+import { Suspense, use, useEffect, useState } from "react";
 
 const notifications = fetch("/api/user/notifications").then((resp) =>
   resp.json(),
 );
 
 function NotificationCount() {
-  const totalNotifications = use(notifications);
+  const unReadNotification : number = use(notifications);
+  const [totalNotifications, setTotalNotifications] = useState(unReadNotification);
+
+  const { data } = useSession();
+
+  useEffect(() => {
+    const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY!, {
+      cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER!,
+    })
+
+    const channelId = `notifications-channel-${data?.user.id}`;
+    const channel = pusher.subscribe(channelId);
+    channel.bind("new-notification", () => {
+      setTotalNotifications((prev) => prev + 1);
+    })
+
+    return () => {
+      channel.unbind_all();
+      channel.unsubscribe();
+    }
+
+  }, [data])
 
   return (
     <Link

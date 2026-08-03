@@ -20,6 +20,8 @@ export default async function NotificationPage() {
     session.user.id,
   );
 
+  await notificationService.clearNotification(session.user.id); 
+
   return (
     <>
       <Heading>{title}</Heading>

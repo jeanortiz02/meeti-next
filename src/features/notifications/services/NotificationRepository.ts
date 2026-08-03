@@ -10,6 +10,7 @@ export interface INotificationRepository {
   create(data: InsertNotification): Promise<SelectNotification>;
   getUnreadCount(userId: string): Promise<number>;
   findByUserId(userId: string): Promise<SelectNotification[]>;
+  delete(userId: string): Promise<void>;
 }
 
 class NotificationRepository implements INotificationRepository {
@@ -40,6 +41,12 @@ class NotificationRepository implements INotificationRepository {
     });
 
     return result;
+  }
+
+  async delete(userId: string) : Promise<void> {
+    await db.update(notifications).set({
+      read: true
+    }).where(eq(notifications.userId, userId));
   }
 }
 

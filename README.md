@@ -218,15 +218,6 @@ Cuando se elimina una comunidad, también se intenta eliminar su imagen remota d
 
 Las notificaciones se guardan en PostgreSQL y se emiten por Pusher. Cuando un usuario se une a una comunidad, el creador recibe una notificación con el nombre del actor, el mensaje y la comunidad objetivo.
 
-## Calidad
-
-Antes de abrir un pull request o desplegar cambios, ejecuta:
-
-```bash
-npm run lint
-npm run build
-```
-
 ## Despliegue
 
 La aplicación puede desplegarse en cualquier plataforma compatible con Next.js que permita:

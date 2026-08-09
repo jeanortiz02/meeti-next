@@ -1,5 +1,7 @@
 import { FormInput, FormLabel, FormTextArea, FormToggle } from "@/shared/components/forms";
 import CommunityFormField from "./CommunityFormField";
+import Ca from "zod/v4/locales/ca.cjs";
+import CategoryFormField from "./CategoryFormField";
 
 export default function MeetiForm() {
 
@@ -21,6 +23,7 @@ export default function MeetiForm() {
           placeholder="Descripción Meeti"
         />
         
+        <CategoryFormField/>
         <CommunityFormField />
 
         <FormLabel htmlFor="availableSeats">Cupo</FormLabel>

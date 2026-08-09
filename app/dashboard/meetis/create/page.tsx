@@ -3,6 +3,8 @@ import Heading from "@/src/shared/components/typography/Heading";
 import Link from "next/link";
 import { generatePageTitle } from "@/src/shared/utils/metadata";
 import CreateMeeti from "@/src/features/meetis/components/CreateMeeti";
+import { requireAuth } from "@/src/lib/auth-server";
+import { redirect } from "next/navigation";
 
 const title = "Crear meeti";
 
@@ -10,7 +12,9 @@ export const metadata: Metadata = {
   title: generatePageTitle(title),
 };
 
-export default function CreateMeetiPage() {
+export default async function CreateMeetiPage() {
+    const { session} = await requireAuth()
+    if(!session) return redirect('/auth/login');
   return (
     <>
       <Heading>{title}</Heading>

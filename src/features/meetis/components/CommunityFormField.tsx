@@ -9,7 +9,7 @@ function CommunityOption() {
   const communities = use<{ id: string; name: string }[]>(communitiesPromise);
   return (
     <>
-      <FormLabel>Comunidad Label</FormLabel>
+      <FormLabel>Comunidad Meeti</FormLabel>
       <FormSelect>
         <option value={""}>Selecciona una comunidad</option>
         {communities.map((community) => (

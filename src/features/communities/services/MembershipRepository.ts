@@ -46,9 +46,8 @@ class MembershipRepository implements IMembershipRepository {
 
   async findJoinedCommunity(userId: string) {
     const result = await db.query.communityMembers.findMany({
-      where: {
-        userId,
-      },
+      where: (communityMembers, { eq }) =>
+        eq(communityMembers.userId, userId),
       with: {
         community: true,
         user: true,

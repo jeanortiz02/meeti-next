@@ -33,11 +33,10 @@ class NotificationRepository implements INotificationRepository {
 
   async findByUserId(userId: string): Promise<SelectNotification[]> {
     const result = await db.query.notifications.findMany({
-      where: {
-        AND: [{ userId: { eq: userId } }, { read: { eq: false } }],
-      },
+      where: (notifications, { and, eq }) =>
+        and(eq(notifications.userId, userId), eq(notifications.read, false)),
       limit: 10,
-      orderBy: { createdAt: "desc" },
+      orderBy: (notifications, { desc }) => [desc(notifications.createdAt)],
     });
 
     return result;

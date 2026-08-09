@@ -9,9 +9,7 @@ export interface IAuthRepository {
 class AuthRepository implements IAuthRepository {
     async userExists(email: string) {
         return await db.query.users.findFirst({
-            where: {
-                email
-            }
+            where: (users, { eq }) => eq(users.email, email),
         })
 
     }

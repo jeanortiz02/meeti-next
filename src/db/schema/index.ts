@@ -1,3 +1,4 @@
 export {  accounts, sessions, users, verifications } from './auth';
 export { community, communityMembers } from './community';
-export { notifications } from './notifications'
+export { notifications } from './notifications';
+export { category } from './category';

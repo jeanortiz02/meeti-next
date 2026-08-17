@@ -8,6 +8,13 @@
       "when": 1786312807771,
       "tag": "0000_add_categories",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1786415519882,
+      "tag": "0001_zippy_nitro",
+      "breakpoints": true
     }
   ]
 }

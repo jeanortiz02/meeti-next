@@ -1,16 +1,21 @@
-import { FormLabel, FormSelect } from "@/src/shared/components/forms";
+import { FormError, FormLabel, FormSelect } from "@/src/shared/components/forms";
 import { Suspense, use } from "react";
+import { useFormContext } from "react-hook-form";
+import { MeetiInput } from "../schemas/meetiSchema";
 
 const communitiesPromise = fetch("/api/user/communities").then((resp) =>
   resp.json(),
 );
 
 function CommunityOption() {
+  const { register, formState: { errors} } = useFormContext<MeetiInput>();
   const communities = use<{ id: string; name: string }[]>(communitiesPromise);
   return (
     <>
       <FormLabel>Comunidad Meeti</FormLabel>
-      <FormSelect>
+      <FormSelect
+        {...register("communityId")}
+      >
         <option value={""}>Selecciona una comunidad</option>
         {communities.map((community) => (
           <option key={community.id} value={community.id}>
@@ -18,6 +23,8 @@ function CommunityOption() {
           </option>
         ))}
       </FormSelect>
+
+      { errors.communityId && <FormError>{errors.communityId.message}</FormError> }
     </>
   );
 }

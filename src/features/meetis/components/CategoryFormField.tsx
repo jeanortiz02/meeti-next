@@ -1,19 +1,23 @@
-import { FormLabel, FormSelect } from "@/src/shared/components/forms";
+import { FormError, FormLabel, FormSelect } from "@/src/shared/components/forms";
 import { Suspense, use } from "react";
 import { SelectCategory } from "../types/meeti.types";
+import { MeetiInput } from "../schemas/meetiSchema";
+import { useFormContext } from "react-hook-form";
 
 const categoriesPromise = fetch("/api/categories").then((resp) =>
   resp.json(),
 );
 
 function CategoriesOption() {
-    
+  const { register, formState: { errors } } = useFormContext<MeetiInput>();
   const categories = use<SelectCategory[]>(categoriesPromise);
 
   return (
     <>
       <FormLabel>Categoría Meeti</FormLabel>
-      <FormSelect>
+      <FormSelect
+        {...register("categoryId")}
+      >
         <option value={""}>Selecciona una categoría</option>
         {categories.map((category) => (
           <option key={category.id} value={category.id}>
@@ -21,6 +25,7 @@ function CategoriesOption() {
           </option>
         ))}
       </FormSelect>
+      { errors.categoryId && <FormError>{errors.categoryId.message}</FormError> }
     </>
   );
 }

@@ -5,9 +5,14 @@ import { useFormContext } from "react-hook-form";
 import { twMerge } from "tailwind-merge";
 import { UploadDropzone } from "../../utils/uploadthing";
 import { FormError } from "../forms";
+import { MeetiInput } from "@/src/features/meetis/schemas/meetiSchema";
 
-export default function UploadImage() {
-  const { formState: { errors }, setValue, clearErrors, getValues } = useFormContext<CommunityInput>();
+type Props = {
+  uploadedImageLabel : string
+}
+
+export default function UploadImage({uploadedImageLabel} : Props) {
+  const { formState: { errors }, setValue, clearErrors, getValues } = useFormContext<CommunityInput | MeetiInput>();
   const [uploadedImage, setUploadedImage] = useState("");
   const currentImage = getValues("image") ? getValues("image") : null;
 
@@ -47,7 +52,7 @@ export default function UploadImage() {
 
       {uploadedImage && (
         <>
-          <p className="text-lg font-bold">Nueva imagen:</p>
+          <p className="text-lg font-bold">{uploadedImageLabel}</p>
           <Image
             src={uploadedImage}
             alt="Nueva imagen"

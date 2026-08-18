@@ -5,6 +5,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
 import { MeetiInput, MeetiSchema } from "../schemas/meetiSchema";
 import MeetiForm from "./MeetiForm";
+import { createMeetiAction } from "../actions/meeti-actions";
+import { toast } from "react-hot-toast";
+import { redirect } from "next/navigation";
 
 export default function CreateMeeti() {
   const methods = useForm<MeetiInput>({
@@ -34,8 +37,12 @@ export default function CreateMeeti() {
   const { isPending } = useSession();
   if (isPending) return "Cargando sesión...";
 
-  const onSubmit = async (data: MeetiInput) => {
-    console.log(data);
+  const onSubmit = async (input: MeetiInput) => {
+    const { error, success } = await createMeetiAction(input)
+
+    if(error) toast.error(error)
+    if(success) toast.success(success)
+    redirect('/dashboard/meetis')
   }
   return (
     <>

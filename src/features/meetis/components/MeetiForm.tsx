@@ -10,6 +10,7 @@ import CategoryFormField from "./CategoryFormField";
 import CommunityFormField from "./CommunityFormField";
 import { useFormContext } from "react-hook-form";
 import { MeetiInput } from "../schemas/meetiSchema";
+import UploadImage from "@/src/shared/components/upload/UploadImage";
 
 const DynamicLocationPicker = dynamic(() => import("./LocationPicker"), {
   ssr: false,
@@ -21,11 +22,8 @@ export default function MeetiForm() {
     formState: { errors },
     setValue,
   } = useFormContext<MeetiInput>();
-  
-  
+
   const isVirtual = watch("virtual");
-
-
 
   return (
     <>
@@ -52,6 +50,10 @@ export default function MeetiForm() {
         {errors.details && <FormError>{errors.details.message}</FormError>}
 
         <CategoryFormField />
+
+        <FormLabel>Cargar Imagen</FormLabel>
+        <UploadImage uploadedImageLabel="Imagen publicada Meeti"/>
+
         <CommunityFormField />
 
         <FormLabel htmlFor="availableSeats">Cupo</FormLabel>

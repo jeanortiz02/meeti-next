@@ -29,3 +29,23 @@ export async function createMeetiAction(input : MeetiInput) {
         error: ""
     }
 }
+
+export async function editMeetiAction(meetiId: string, input: MeetiInput) {
+    const { session } = await requireAuth();
+    if(!session) {
+        return {
+            error: "No autenticado",
+            success: ""
+        }
+    }
+
+    const data = MeetiSchema.safeParse(input);
+    if(!data.success) {
+        return {
+            error: "Hubo un error",
+            success: ""
+        }
+    }
+
+    await meetiService.updateMeeting(meetiId, data.data, session.user)
+}

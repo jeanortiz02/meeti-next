@@ -47,6 +47,9 @@ export default async function MeetisPage() {
                     <a className="hover:underline font-bold text-lg">{title}</a>
                     <p className="text-gray-600 text-sm">{formatMeetingDate(date, time)}</p>
                     <p className="text-gray-600 text-sm">{meeti.attendanceCount} {pluralize("Asistente", meeti.attendanceCount)}</p>
+                    <div className={`inline-flex items-center gap-x-1.5 rounded-full py-1 px-2 text-xs font-semibold text-gray-800 ring-1 ring-inset ring-gray-500/10 ${meeti.data.virtual ? "bg-green-100" : "bg-blue-100"}`}>
+                      {meeti.data.virtual ? "Virtual" : "Presencial"}
+                    </div>
                   </div>
                 </div>
                 <div className="flex shrink-0 items-center gap-x-6">

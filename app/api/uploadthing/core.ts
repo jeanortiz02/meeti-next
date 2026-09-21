@@ -7,11 +7,11 @@ const f = createUploadthing();
 export const ourFileRouter = {
   meetiUploader: f({
     image: {
-      maxFileSize: "1MB",
+      maxFileSize: "4MB",
       maxFileCount: 1,
     }
   })
-    .middleware(async ({ req }) => {
+    .middleware(async () => {
       // Este código se ejecuta antes de subir el archivo
       const { session } = await requireAuth();
 

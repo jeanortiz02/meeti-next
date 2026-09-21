@@ -25,8 +25,8 @@ const markerIcon = new Icon({
 export default function LocationPicker() {
   const { register, getValues, setValue, formState: { errors }, clearErrors} = useFormContext<MeetiInput>();
 
-  const lat = getValues("location.lat");
-  const lng = getValues("location.lng");
+  const lat = getValues("location.lat") ?? 18.483046;
+  const lng = getValues("location.lng") ?? -69.803680;
 
   const [coordinates, setCoordinates] = useState<LatLngTuple>([lat, lng]);
 

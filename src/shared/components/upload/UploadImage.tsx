@@ -12,7 +12,7 @@ type Props = {
 }
 
 export default function UploadImage({uploadedImageLabel} : Props) {
-  const { formState: { errors }, setValue, clearErrors, getValues } = useFormContext<CommunityInput | MeetiInput>();
+  const { formState: { errors }, setValue, setError, clearErrors, getValues } = useFormContext<CommunityInput | MeetiInput>();
   const [uploadedImage, setUploadedImage] = useState("");
   const currentImage = getValues("image") ? getValues("image") : null;
 
@@ -35,11 +35,17 @@ export default function UploadImage({uploadedImageLabel} : Props) {
 
           }
         }}
+        onUploadError={(error) => {
+          setError("image", {
+            type: "manual",
+            message: error.message || "No se pudo subir la imagen",
+          });
+        }}
         content={{
           button: "Selecciona una imagen",
           label:
             "Arrastra y suelta tu imagen aquí, o haz clic para seleccionar",
-          allowedContent: "Solo se permiten imágenes (max 1MB)",
+          allowedContent: "Solo se permiten imágenes (max 4MB)",
         }}
         config={{
           cn: twMerge,

@@ -1,11 +1,16 @@
 import { db } from "@/src/db";
-import { InsertMeeti, SelectMeeti } from "../types/meeti.types";
+import {
+  InsertMeeti,
+  InsertMeetiLocation,
+  SelectMeeti,
+} from "../types/meeti.types";
 import { meeti, meetiLocations } from "@/src/db/schema";
 import { format } from "date-fns";
 import { eq } from "drizzle-orm";
 
 export interface IMeetiRepository {
   insert(input: InsertMeeti): Promise<void>;
+  insertLocation(data: InsertMeetiLocation): Promise<void>;
   findUpcomingByUser(userId: string): Promise<SelectMeeti[]>;
   findById(id: string): Promise<SelectMeeti | null>;
   update(data: InsertMeeti, meetiId: string): Promise<void>;
@@ -21,6 +26,10 @@ class MeetiRepository implements IMeetiRepository {
         meetiId: insertedMeeti.id,
       });
     }
+  }
+
+  async insertLocation(data: InsertMeetiLocation) {
+    await db.insert(meetiLocations).values(data);
   }
 
   async findUpcomingByUser(userId: string): Promise<SelectMeeti[]> {
@@ -47,9 +56,31 @@ class MeetiRepository implements IMeetiRepository {
   }
 
   async update(data: InsertMeeti, meetiId: string): Promise<void> {
-    const [updatedMeeti] = await db.update(meeti).set(data).where(eq(meeti.id, meetiId)).returning();
+    const [updatedMeeti] = await db
+      .update(meeti)
+      .set(data)
+      .where(eq(meeti.id, meetiId))
+      .returning();
 
     // Actualizar ubicación solo si el event es virtual
+    if (!updatedMeeti.virtual && data.location) {
+      const locationExists = await db.query.meetiLocations.findFirst({
+        where: (meetiLocation, { eq }) =>
+          eq(meetiLocations.meetiId, updatedMeeti.id),
+      });
+
+      if (locationExists) {
+        await db
+          .update(meetiLocations)
+          .set(data.location)
+          .where(eq(meetiLocations.meetiId, updatedMeeti.id));
+      } else {
+        await this.insertLocation({
+          ...data.location,
+          meetiId: updatedMeeti.id,
+        });
+      }
+    }
   }
 }
 

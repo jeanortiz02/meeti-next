@@ -50,6 +50,22 @@ class MeetiService {
     return meeting;
   }
 
+  async getMeetingWithDetail(meetiId: string, user?: User) {
+    const meeti = await this.meetiRepository.findFullById(meetiId);
+
+    if(!meeti) throw new Error('Meeti no encontrado');
+
+    return {
+      data: meeti,
+      context: {
+
+      },
+      permissions: {
+        
+      }
+    }
+  }
+
   async getMeetingWithPermissions(meeitId: string, user: User) {
     const meeting = await this.getMeetingById(meeitId);
 

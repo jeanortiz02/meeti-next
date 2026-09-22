@@ -1,6 +1,7 @@
 import { relations } from "drizzle-orm";
 import {
   accounts,
+  category,
   community,
   communityMembers,
   meeti,
@@ -47,4 +48,16 @@ export const meetiRelations = relations(meeti, ({ one }) => ({
     fields: [meeti.id],
     references: [meetiLocations.meetiId],
   }),
+  category: one(category, {
+    fields: [meeti.categoryId],
+    references: [category.id]
+  }),
+  community: one(community, {
+    fields: [meeti.communityId],
+    references: [community.id]
+  }),
+  admin: one(users, {
+    fields: [meeti.createdBy],
+    references: [users.id]
+  })
 }));

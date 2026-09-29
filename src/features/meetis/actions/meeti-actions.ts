@@ -48,4 +48,9 @@ export async function editMeetiAction(meetiId: string, input: MeetiInput) {
     }
 
     await meetiService.updateMeeting(meetiId, data.data, session.user)
+
+    return {
+        error: "",
+        success: "Meeti actualizado correctamente"
+    }
 }

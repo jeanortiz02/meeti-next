@@ -1,6 +1,6 @@
 
 
-import { formatDistanceToNow } from 'date-fns';
+import { formatDistanceToNow, format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale'
 
 export const formatCreatedDate = (date :Date) => {
@@ -19,3 +19,5 @@ export const formatMeetingDate = (date: string, time: string) => {
         locale: es,
     })
 } 
+
+export const displayDate = (date: string) => format(parseISO(date), 'PPPP', {locale: es});

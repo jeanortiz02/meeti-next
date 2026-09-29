@@ -38,22 +38,44 @@ export default async function MeetisPage() {
           className="divide-y divide-gray-100 dark:divide-white/5 mt-10 shadow-lg p-10"
         >
           {meetis.map((meeti) => {
-            const { id, title, image, date, time} = meeti.data;
+            const { id, title, image, date, time } = meeti.data;
             return (
-              <li key={id}className="flex justify-between gap-x-6 py-5">
+              <li key={id} className="flex justify-between gap-x-6 py-5">
                 <div className="flex items-center min-w-0 gap-x-4">
-                  <Image src={image} alt={`Imagen de ${title}`} width={400} height={250} className="w-40" priority />
+                  <Image
+                    src={image}
+                    alt={`Imagen de ${title}`}
+                    width={400}
+                    height={250}
+                    className="w-40"
+                    priority
+                  />
                   <div className="min-w-0 flex-auto">
-                    <a className="hover:underline font-bold text-lg">{title}</a>
-                    <p className="text-gray-600 text-sm">{formatMeetingDate(date, time)}</p>
-                    <p className="text-gray-600 text-sm">{meeti.attendanceCount} {pluralize("Asistente", meeti.attendanceCount)}</p>
-                    <div className={`inline-flex items-center gap-x-1.5 rounded-full py-1 px-2 text-xs font-semibold text-gray-800 ring-1 ring-inset ring-gray-500/10 ${meeti.data.virtual ? "bg-green-100" : "bg-blue-100"}`}>
+                    <Link
+                      className="hover:underline font-bold text-lg"
+                      href={`/meetis/${meeti.data.id}`}
+                      target="_blank"
+                    >
+                      {title}
+                    </Link>
+                    <p className="text-gray-600 text-sm">
+                      {formatMeetingDate(date, time)}
+                    </p>
+                    <p className="text-gray-600 text-sm">
+                      {meeti.attendanceCount}{" "}
+                      {pluralize("Asistente", meeti.attendanceCount)}
+                    </p>
+                    <div
+                      className={`inline-flex items-center gap-x-1.5 rounded-full py-1 px-2 text-xs font-semibold text-gray-800 ring-1 ring-inset ring-gray-500/10 ${meeti.data.virtual ? "bg-green-100" : "bg-blue-100"}`}
+                    >
                       {meeti.data.virtual ? "Virtual" : "Presencial"}
                     </div>
                   </div>
                 </div>
                 <div className="flex shrink-0 items-center gap-x-6">
-                  {meeti.context.isAdmin && <MeetiDropdownMenu meeti={meeti.data} />}
+                  {meeti.context.isAdmin && (
+                    <MeetiDropdownMenu meeti={meeti.data} />
+                  )}
                 </div>
               </li>
             );

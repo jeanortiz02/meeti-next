@@ -15,6 +15,13 @@
       "when": 1786415519882,
       "tag": "0001_zippy_nitro",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1790646066176,
+      "tag": "0002_fancy_azazel",
+      "breakpoints": true
     }
   ]
 }

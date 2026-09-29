@@ -43,3 +43,8 @@ export const MeetiSchema = z.discriminatedUnion("virtual", [
 ])
 
 export type MeetiInput = z.infer<typeof MeetiSchema>
+
+
+// Fix ERROR: 
+export type MeetiFormInput = z.input<typeof MeetiSchema>;
+export type MeetiFormOutput = z.output<typeof MeetiSchema>;

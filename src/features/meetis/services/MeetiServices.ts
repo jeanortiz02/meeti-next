@@ -1,14 +1,18 @@
 import { User } from "better-auth";
-import { MeetiInput } from "../schemas/meetiSchema";
-import { IMeetiRepository, meetiRepository } from "./MeetiRepository";
-import { communityRepository, ICommunityRepository } from "../../communities/services/CommunityRepository";
 import { CommunityPolicy } from "../../communities/policies/CommunityPolicy";
-import { MeetiPolicy } from "../policies/MeetiPolicies";
+import { communityRepository, ICommunityRepository } from "../../communities/services/CommunityRepository";
+import { MeetiPolicy } from "../policies/MeetiPolicy";
+import { MeetiInput } from "../schemas/meetiSchema";
+import { IMeetiAttendeesRepository, meetiAttendeesRepository } from './MeetiAttendeesRepository';
+import { IMeetiRepository, meetiRepository } from "./MeetiRepository";
+import { MeetiAttendeePolicy } from "../policies/MeetiAttendeePolicy";
 
 class MeetiService {
   constructor(
     private meetiRepository: IMeetiRepository, 
-    private communityRepository : ICommunityRepository) {}
+    private communityRepository : ICommunityRepository,
+    private meetiAttendeesRepository: IMeetiAttendeesRepository,
+  ) {}
 
   async createMeeti(input: MeetiInput, user: User) {
     const community = await communityRepository.findById(input.communityId);
@@ -54,14 +58,19 @@ class MeetiService {
     const meeti = await this.meetiRepository.findFullById(meetiId);
 
     if(!meeti) throw new Error('Meeti no encontrado');
+    
+    if(!user) throw new Error ('Usuario....');
+    const isAttending = await this.meetiAttendeesRepository.isUserAttending(user.id, meeti.id);
+    const isAdmin = MeetiPolicy.isAdmin(user, meeti);
 
     return {
       data: meeti,
       context: {
-
+        isAdmin
       },
       permissions: {
-        
+        canConfirm: MeetiAttendeePolicy.canConfirm(user, meeti, isAttending),
+        canCancel: MeetiAttendeePolicy.canCancel(user, meeti, isAttending),
       }
     }
   }
@@ -98,4 +107,4 @@ class MeetiService {
   }
 }
 
-export const meetiService = new MeetiService(meetiRepository, communityRepository);
+export const meetiService = new MeetiService(meetiRepository, communityRepository, meetiAttendeesRepository);

@@ -1,5 +1,9 @@
+import { DynamicMeetiLocation } from "@/src/features/meetis/components/DynamicMeetiLocation";
+import OrganizerCard from "@/src/features/meetis/components/OrganizerCard";
 import { meetiService } from "@/src/features/meetis/services/MeetiServices";
+import { requireAuth } from "@/src/lib/auth-server";
 import Heading from "@/src/shared/components/typography/Heading";
+import { displayDate } from "@/src/shared/utils/date";
 import { generatePageTitle } from "@/src/shared/utils/metadata";
 import { Metadata } from "next";
 import Image from "next/image";
@@ -38,8 +42,12 @@ export async function generateMetadata({
 }
 
 export default async function MeetiPage(props: PageProps<"/meetis/[id]">) {
+  const { session } = await requireAuth();
   const { id } = await props.params;
-  const meeti = await meetiService.getMeetingWithDetail(id);
+  const meeti = await meetiService.getMeetingWithDetail(id, session?.user);
+  console.log(meeti)
+
+  const { virtual: isVirtual, location } = meeti.data;
 
   return (
     <>
@@ -79,7 +87,34 @@ export default async function MeetiPage(props: PageProps<"/meetis/[id]">) {
         </section>
 
         <aside className="bg-slate-100 rounded-2xl">
-          <section className="space-y-5 p-10 "></section>
+          {
+            isVirtual && (
+              <p className="bg-orange-400 m-5 rounded-lg text-center p-3 text-white font-bold">Este meeti es virtual</p>
+            )
+          }
+
+          {
+            location && !isVirtual && (
+              <DynamicMeetiLocation address={location.address} lat={location.lat} lng={location.lng} placeName={location.placeName}/>
+            )
+          }
+          <section className="space-y-5 p-10 ">
+
+            <Heading level={2}>Información Meeti</Heading>
+
+            <p>
+              <span className="font-bold">Fecha:</span> {''}
+              {displayDate(meeti.data.date)}
+            </p>
+
+            <p>
+              <span className="font-bold">Horas:</span> {''}
+              {meeti.data.time} Horas
+            </p>
+
+            <OrganizerCard organizer={meeti.data.admin}/>
+
+          </section>
         </aside>
       </main>
     </>

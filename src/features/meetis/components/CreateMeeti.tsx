@@ -2,15 +2,15 @@
 import { useSession } from "@/src/lib/auth-client";
 import { Form, FormSubmit } from "@/src/shared/components/forms";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FormProvider, useForm } from "react-hook-form";
-import { MeetiInput, MeetiSchema } from "../schemas/meetiSchema";
-import MeetiForm from "./MeetiForm";
-import { createMeetiAction } from "../actions/meeti-actions";
-import { toast } from "react-hot-toast";
 import { redirect } from "next/navigation";
+import { FormProvider, useForm } from "react-hook-form";
+import { toast } from "react-hot-toast";
+import { createMeetiAction } from "../actions/meeti-actions";
+import { MeetiFormInput, MeetiFormOutput, MeetiInput, MeetiSchema } from "../schemas/meetiSchema";
+import MeetiForm from "./MeetiForm";
 
 export default function CreateMeeti() {
-  const methods = useForm<MeetiInput>({
+  const methods = useForm<MeetiFormInput, unknown, MeetiFormOutput>({
     resolver: zodResolver(MeetiSchema),
     mode: "all",
     defaultValues: {

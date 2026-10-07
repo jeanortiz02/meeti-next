@@ -1,8 +1,23 @@
 "use server"
+import { getClientIp } from "@/src/shared/utils/ip";
 import { ForgotPasswordInput, ForgotPasswordSchema, SetPasswordInput, SetPasswordSchema, SignInInput, SignInSchema, SignUpInput, SignUpSchema } from "../schema/authSchema";
 import { authServices } from "../services/AuthServices";
+import { rateLimit } from "@/src/lib/limiter";
+import { getMinutesDiffFromNow } from "@/src/shared/utils/date";
 
 export async function signUpAction(input: SignUpInput) {
+
+    // rate limit
+    const ip = await getClientIp();
+    const { success, reset} = await rateLimit.limit(ip)
+
+    if(!success) {
+        return {
+            error: `Demasiadas solicitudes. Intenta de nuevo en ${getMinutesDiffFromNow(reset)} minutos.`,
+            success: ''
+        }
+    }
+
     const data = SignUpSchema.safeParse(input);
 
     if ( !data.success ) {
@@ -17,6 +32,18 @@ export async function signUpAction(input: SignUpInput) {
 
 
 export async function signInAction(input : SignInInput) {
+
+    // rate limit
+    const ip = await getClientIp();
+    const { success, reset} = await rateLimit.limit(ip)
+
+    if(!success) {
+        return {
+            error: `Demasiadas solicitudes. Intenta de nuevo en ${getMinutesDiffFromNow(reset)} minutos.`,
+            success: ''
+        }
+    }
+
     const data = SignInSchema.safeParse(input);
 
     if ( !data.success ) {
@@ -31,6 +58,18 @@ export async function signInAction(input : SignInInput) {
 }
 
 export const forgotPasswordAction = async (input: ForgotPasswordInput) => {
+
+    // rate limit
+    const ip = await getClientIp();
+    const { success, reset} = await rateLimit.limit(ip)
+
+    if(!success) {
+        return {
+            error: `Demasiadas solicitudes. Intenta de nuevo en ${getMinutesDiffFromNow(reset)} minutos.`,
+            success: ''
+        }
+    }
+
     const data = ForgotPasswordSchema.safeParse(input);
 
     if ( !data.success ) {

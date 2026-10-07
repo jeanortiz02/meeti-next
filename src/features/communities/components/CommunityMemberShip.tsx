@@ -27,7 +27,7 @@ export default function CommunityMemberShip({
   return (
     <>
       <button
-        className={`${canJoin ? "bg-orange-500" : "bg-orange-600" } font-bold text-lg w-full lg:w-auto px-5 py-2 text-white cursor-pointer`}
+        className={`${canJoin ? "bg-orange-500" : "bg-red-600" } font-bold text-lg w-full lg:w-auto px-5 py-2 text-white cursor-pointer`}
         onClick={handleClick}
       >
         {canJoin ? "Unirme a la comunidad" : "Abandonar la comunidad"}

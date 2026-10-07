@@ -39,7 +39,7 @@ class MeetiRepository implements IMeetiRepository {
 
     const result = await db.query.meeti.findMany({
       where: (meeting, { and, eq, gte }) => {
-        and(eq(meeting.createdBy, userId), gte(meeting.date, today));
+        return and(eq(meeting.createdBy, userId), gte(meeting.date, today));
       },
 
       orderBy: (meeting, { asc }) => asc(meeting.date),

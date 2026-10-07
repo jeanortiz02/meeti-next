@@ -83,7 +83,7 @@ export default async function MeetisPage() {
         </ul>
       ) : (
         <p className="text-center mt-10 text-lg">
-          No Hay Meetis Aún. ${" "}
+          No Hay Meetis Aún. {" "}
           <Link
             href={"/dashboard/meetis/create"}
             className="text-orange-500 font-bold"

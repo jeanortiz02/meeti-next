@@ -13,9 +13,10 @@ export class MeetiAttendeePolicy {
     isAttending: boolean
   ): boolean {
     // No puede confirmar si:
-    // TODO - El evento ya pasó
+    // - El evento ya pasó
     // - Es el admin/owner
     // - Ya está asistiendo
+    if(MeetiPolicy.isPastMeeti(meeti)) return false
     if (MeetiPolicy.isAdmin(user, meeti)) return false
     if (isAttending) return false
     
@@ -31,9 +32,10 @@ export class MeetiAttendeePolicy {
     isAttending: boolean
   ): boolean {
     // No puede cancelar si:
-    // TODO - El evento ya pasó
+    // - El evento ya pasó
     // - Es el admin/owner
     // - No está asistiendo
+    if(MeetiPolicy.isPastMeeti(meeti)) return false
     if (MeetiPolicy.isAdmin(user, meeti)) return false
     if (!isAttending) return false
     

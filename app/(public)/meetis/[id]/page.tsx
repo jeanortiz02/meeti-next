@@ -1,3 +1,4 @@
+import AttendanceToggleButton from "@/src/features/meetis/components/AttendanceToggleButton";
 import { DynamicMeetiLocation } from "@/src/features/meetis/components/DynamicMeetiLocation";
 import OrganizerCard from "@/src/features/meetis/components/OrganizerCard";
 import { meetiService } from "@/src/features/meetis/services/MeetiServices";
@@ -45,7 +46,8 @@ export default async function MeetiPage(props: PageProps<"/meetis/[id]">) {
   const { session } = await requireAuth();
   const { id } = await props.params;
   const meeti = await meetiService.getMeetingWithDetail(id, session?.user);
-  console.log(meeti)
+
+  if(meeti.context.isPastMeeti) throw new Error("Meeti no disponible, ya ha pasado la fecha del evento");
 
   const { virtual: isVirtual, location } = meeti.data;
 
@@ -72,6 +74,17 @@ export default async function MeetiPage(props: PageProps<"/meetis/[id]">) {
           </p>
         </div>
       </nav>
+
+      {
+        meeti.permissions && !meeti.context.isAdmin && (
+          <div className="max-w-7xl mx-auto my-10 flex justify-end w-full">
+            <AttendanceToggleButton
+              meetiId={meeti.data.id}
+              permissions={meeti.permissions}
+            />
+          </div>
+        )
+      }
 
       <Heading className="text-center mt-10">{meeti.data.title}</Heading>
       <main className="max-w-7xl mx-auto grid grid-cols-1 gap-5 lg:grid-cols-3 p-5 lg:px-0 mt-10">

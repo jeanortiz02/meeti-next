@@ -2,6 +2,7 @@ import EditForm from "@/src/features/meetis/components/EditForm";
 import { meetiService } from "@/src/features/meetis/services/MeetiServices";
 import { requireAuth } from "@/src/lib/auth-server";
 import Heading from "@/src/shared/components/typography/Heading";
+import { generatePageTitle } from "@/src/shared/utils/metadata";
 import { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -13,7 +14,7 @@ export async function generateMetadata({
   const meeting = await meetiService.getMeetingById(id);
 
   return {
-    title: `Editar Meeti: ${meeting.title}`,
+    title: generatePageTitle(`Editar Meeti: ${meeting.title}`),
     description: `Editar Meeti: ${meeting.title}`,
   };
 }

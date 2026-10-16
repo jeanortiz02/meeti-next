@@ -5,6 +5,7 @@ import {
   community,
   communityMembers,
   meeti,
+  meetiAttendees,
   meetiLocations,
   sessions,
   users,
@@ -61,3 +62,10 @@ export const meetiRelations = relations(meeti, ({ one }) => ({
     references: [users.id]
   })
 }));
+
+export const meetiAttendeesRelations = relations(meetiAttendees, ({ one }) => ({
+  user: one(users, {
+    fields: [meetiAttendees.userId],
+    references: [users.id],
+  }),
+})); 

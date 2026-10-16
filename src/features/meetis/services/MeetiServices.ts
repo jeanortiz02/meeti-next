@@ -107,6 +107,21 @@ class MeetiService {
 
     await this.meetiRepository.update({...data, createdBy: user.id}, meeti.data.id)
   }
+
+  async getMeetingAttendes(meetiId: string, user: User) {
+    const meeti = await this.getMeetingById(meetiId);
+
+    if(!MeetiPolicy.canViewAttends(user, meeti)) {
+      throw new Error('No autorizado')
+    }
+
+    const attendees = await this.meetiAttendeesRepository.findAttendesByMeetiId(meeti.id);
+
+    return {
+       meeti,
+       attendees,
+    }
+  }
 }
 
 export const meetiService = new MeetiService(meetiRepository, communityRepository, meetiAttendeesRepository);

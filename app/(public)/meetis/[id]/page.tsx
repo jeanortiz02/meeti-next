@@ -75,16 +75,19 @@ export default async function MeetiPage(props: PageProps<"/meetis/[id]">) {
         </div>
       </nav>
 
-      {
-        meeti.permissions && !meeti.context.isAdmin && (
-          <div className="max-w-7xl mx-auto my-10 flex justify-end w-full">
-            <AttendanceToggleButton
-              meetiId={meeti.data.id}
-              permissions={meeti.permissions}
-            />
-          </div>
-        )
-      }
+      <div className="max-w-7xl mx-auto my-10 flex justify-end w-full">
+        {!session?.user && (
+          <p className="font-bold border border-orange-500 p-2">Confirma tu asistencia obteniendo tu cuenta, es gratis</p>
+        )}
+        {
+          meeti.permissions && !meeti.context.isAdmin && (
+              <AttendanceToggleButton
+                meetiId={meeti.data.id}
+                permissions={meeti.permissions}
+              />
+            )
+          }
+        </div>
 
       <Heading className="text-center mt-10">{meeti.data.title}</Heading>
       <main className="max-w-7xl mx-auto grid grid-cols-1 gap-5 lg:grid-cols-3 p-5 lg:px-0 mt-10">

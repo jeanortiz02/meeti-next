@@ -58,17 +58,28 @@ class MeetiService {
     const meeti = await this.meetiRepository.findFullById(meetiId);
 
     if(!meeti) throw new Error('Meeti no encontrado');
+    const isPastMeeti = MeetiPolicy.isPastMeeti(meeti);
     
-    if(!user) throw new Error ('Usuario....');
+    if(!user) {
+      return {
+        data: meeti, 
+        context: {
+          isAdmin: false,
+          isPastMeeti,
+          isAttending: false,
+        },
+        permissions: null,
+      }
+    };
     const isAttending = await this.meetiAttendeesRepository.isUserAttending(user.id, meeti.id);
     const isAdmin = MeetiPolicy.isAdmin(user, meeti);
-    const isPastMeeti = MeetiPolicy.isPastMeeti(meeti);
 
     return {
       data: meeti,
       context: {
         isAdmin,
         isPastMeeti,
+        isAttending,
       },
       permissions: {
         canConfirm: MeetiAttendeePolicy.canConfirm(user, meeti, isAttending),

@@ -6,13 +6,14 @@ import { twMerge } from "tailwind-merge";
 import { UploadDropzone } from "../../utils/uploadthing";
 import { FormError } from "../forms";
 import { MeetiInput } from "@/src/features/meetis/schemas/meetiSchema";
+import { ProfileInput } from "@/src/features/profile/schema/profileSchema";
 
 type Props = {
   uploadedImageLabel : string
 }
 
 export default function UploadImage({uploadedImageLabel} : Props) {
-  const { formState: { errors }, setValue, setError, clearErrors, getValues } = useFormContext<CommunityInput | MeetiInput>();
+  const { formState: { errors }, setValue, setError, clearErrors, getValues } = useFormContext<CommunityInput | MeetiInput | ProfileInput>();
   const [uploadedImage, setUploadedImage] = useState("");
   const currentImage = getValues("image") ? getValues("image") : null;
 

@@ -47,5 +47,7 @@ class CommunityRepository implements ICommunityRepository {
   async delete(communityId: string) : Promise<void> {
     await db.delete(community).where(eq(community.id, communityId));
   }
+  
+
 }
 export const communityRepository = new CommunityRepository();

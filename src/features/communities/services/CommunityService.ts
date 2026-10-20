@@ -1,23 +1,25 @@
+import { deleteUTFiles } from "@/src/lib/uploadthing-server";
 import { checkPassword } from "@/src/shared/utils/auth";
 import { User } from "better-auth";
 import { notFound } from "next/navigation";
+import { IMeetiRepository, meetiRepository } from "../../meetis/services/MeetiRepository";
 import { CommunityPolicy } from "../policies/CommunityPolicy";
 import { MemberShiPolicy } from "../policies/MembershipPolicy";
 import { CommunityInput } from "../schema/CommunitySchema";
 import {
-  communityRepository,
-  ICommunityRepository,
+    communityRepository,
+    ICommunityRepository,
 } from "./CommunityRepository";
-import { deleteUTFiles } from "@/src/lib/uploadthing-server";
 import {
-  IMembershipRepository,
-  membershipRepository,
+    IMembershipRepository,
+    membershipRepository,
 } from "./MembershipRepository";
 
 class CommunityService {
   constructor(
     private communityRepository: ICommunityRepository,
     private membershipRepository: IMembershipRepository,
+    private meetiRepository: IMeetiRepository
   ) {}
 
   async createCommunity(data: CommunityInput, userId: string) {
@@ -155,9 +157,14 @@ class CommunityService {
       success: "Comunidad eliminada correctamente",
     };
   }
+
+  async getUpcommingMeetisByCommunity(communityId: string) {
+    return await this.meetiRepository.findUpcomingMeetisByCommunity(communityId);
+  }
 }
 
 export const communityService = new CommunityService(
   communityRepository,
   membershipRepository,
+  meetiRepository,
 );

@@ -12,7 +12,9 @@ import UploadImage from "@/src/shared/components/upload/UploadImage";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
 import { ProfileInput, ProfileSchema } from "../schema/profileSchema";
-import { User } from "better-auth";
+import { User } from "../../auth/types/auth.types";
+import { updateProfileAction } from "../actions/profile-action";
+import { toast } from "react-hot-toast";
 
 
 type Props = {
@@ -25,7 +27,7 @@ export default function ProfileForm({user} : Props) {
     mode: "all",
     defaultValues: {
       name: user.name,
-      bio: "",
+      bio: user.bio ?? "",
       image: user.image ?? '',
     },
   });
@@ -33,8 +35,14 @@ export default function ProfileForm({user} : Props) {
   const { register, formState: { errors}, handleSubmit } = methods;
 
 
-  const onSubmit = (data: ProfileInput) => {
-    console.log(data)
+  const onSubmit = async (data: ProfileInput) => {
+    const { error, success} = await updateProfileAction(data);
+
+    if(success) {
+      toast.success(success)
+    } else {
+      toast.error(error)
+    }
   }
 
   return (

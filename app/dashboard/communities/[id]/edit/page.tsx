@@ -41,7 +41,7 @@ export default async function EditCommunityPage(
     id,
     session.user,
   );
-  if (!community.permission.canEdit) redirect("/dashboard/communities");
+  if (!community.permission?.canEdit) redirect("/dashboard/communities");
   return (
     <>
       <Heading>Editar Comunidad - {community.data.name}</Heading>

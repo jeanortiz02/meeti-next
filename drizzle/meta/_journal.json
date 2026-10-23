@@ -22,6 +22,13 @@
       "when": 1790646066176,
       "tag": "0002_fancy_azazel",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1792634093806,
+      "tag": "0003_sharp_molecule_man",
+      "breakpoints": true
     }
   ]
 }

@@ -14,12 +14,14 @@ import {
     IMembershipRepository,
     membershipRepository,
 } from "./MembershipRepository";
+import { IProfileRepository, profileRepository } from "../../profile/services/ProfileRepository";
 
 class CommunityService {
   constructor(
     private communityRepository: ICommunityRepository,
     private membershipRepository: IMembershipRepository,
-    private meetiRepository: IMeetiRepository
+    private meetiRepository: IMeetiRepository,
+    private profileRepository : IProfileRepository,
   ) {}
 
   async createCommunity(data: CommunityInput, userId: string) {
@@ -82,10 +84,11 @@ class CommunityService {
   async getCommunityDetails(communityId: string, user?: User) {
     const community = await this.getCommunity(communityId);
     const memberCount = await this.membershipRepository.getMemberCount(community.id);
-
+    const admin = await this.profileRepository.findById(community.createdBy)
+    
     if (!user) {
       return {
-        data: community,
+        data: {...community, admin},
         memberCount,
         context: null,
         permission: null,
@@ -104,7 +107,7 @@ class CommunityService {
     const canLeave = MemberShiPolicy.canLeave(user, community, isMember);
 
     return {
-      data: community,
+      data: {...community, admin},
       memberCount,
       context: {
         isMember,
@@ -167,4 +170,5 @@ export const communityService = new CommunityService(
   communityRepository,
   membershipRepository,
   meetiRepository,
+  profileRepository,
 );

@@ -1,6 +1,7 @@
 import CommunityActionsPanel from "@/src/features/communities/components/CommunityActionsPanel";
 import UpcommingCommunitiesMeeti from "@/src/features/communities/components/UpcommingCommunitiesMeeti";
 import { communityService } from "@/src/features/communities/services/CommunityService";
+import OrganizerCard from "@/src/features/meetis/components/OrganizerCard";
 import getAuthServerSession from "@/src/lib/auth-server";
 import Heading from "@/src/shared/components/typography/Heading";
 import { generatePageTitle } from "@/src/shared/utils/metadata";
@@ -58,7 +59,9 @@ export default async function CommunityPage(
               {community.memberCount} {pluralize("miembro", community.memberCount)}
             </p>
           </div>
-          <div className="bg-slate-100 p-5 rounded-2xl">{/* Admin Aquí */}</div>
+          <div className="bg-slate-100 p-5 rounded-2xl">
+            <OrganizerCard organizer={community.data.admin}/>
+          </div>
         </div>
       </main>
       <UpcommingCommunitiesMeeti communityId={id}/>

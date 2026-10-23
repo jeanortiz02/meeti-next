@@ -21,6 +21,10 @@ class ProfileService {
         })
     }
 
+    async getProfileDetails(profileId: string) {
+        console.log(profileId)
+    }
+
 }
 
 export const profileService = new ProfileService(profileRepository)

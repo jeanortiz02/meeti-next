@@ -1,6 +1,7 @@
 import Heading from "@/src/shared/components/typography/Heading";
-import { User } from "better-auth";
 import Image from "next/image";
+import { User } from "../../auth/types/auth.types";
+import Link from "next/link";
 
 
 type Props = {
@@ -9,7 +10,7 @@ type Props = {
 
 export default function OrganizerCard({organizer} : Props) {
 
-    const { image, name, id } = organizer;
+    const { image, name, id, bio } = organizer;
 
   return (
     <>
@@ -26,12 +27,11 @@ export default function OrganizerCard({organizer} : Props) {
         </div>
         <div className="col-span-3 space-y-3">
           <p className="text-lg font-black">{name}</p>
-          <p className="text-gray-500 text-sm">
-            {/* TODO: Perfiles */}
-          </p>
-          <a
+          <p className="text-gray-500 text-sm">{bio}</p>
+          <Link
             className="font-bold text-sm bg-pink-600 p-2  text-white block w-full text-center"
-          >Ver Perfil</a>
+            href={`/profiles/${id}`}
+          >Ver Perfil</Link>
         </div>
       </div>
     </>

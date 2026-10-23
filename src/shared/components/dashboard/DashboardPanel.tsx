@@ -1,19 +1,19 @@
 'use client'
 
-import { useState } from 'react'
-import { Dialog, DialogBackdrop, DialogPanel, TransitionChild } from '@headlessui/react'
-import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
-import Logo from '../ui/Logo'
-import NotificationsPanel from './NotificationsPanel'
-import UserMenu from './UserMenu'
-import MobileSidebar from './MobileSidebar'
-import DashboardNavigation from './DashboardNavigation'
 import { useSession } from '@/src/lib/auth-client';
+import { Dialog, DialogBackdrop, DialogPanel, TransitionChild } from '@headlessui/react';
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import { useState } from 'react';
+import Logo from '../ui/Logo';
+import DashboardNavigation from './DashboardNavigation';
+import MobileSidebar from './MobileSidebar';
+import NotificationsPanel from './NotificationsPanel';
+import UserMenu from './UserMenu';
 
 export default function DashboardPanel() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const {isPending} = useSession();
-  if(isPending) return 'Cargando....'
+  const {isPending, data} = useSession();
+  if(isPending || !data) return 'Cargando....'
 
   return (
     <>
@@ -71,7 +71,7 @@ export default function DashboardPanel() {
 
         <div className=" inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0 ">
           <NotificationsPanel />
-          <UserMenu />
+          <UserMenu userId={data.user.id}/>
         </div>
       </div>
     </>

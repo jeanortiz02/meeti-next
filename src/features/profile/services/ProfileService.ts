@@ -22,7 +22,7 @@ class ProfileService {
     }
 
     async getProfileDetails(profileId: string) {
-        console.log(profileId)
+        return this.profileRepository.findFullProfileById(profileId);
     }
 
 }
